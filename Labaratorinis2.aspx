@@ -26,9 +26,6 @@
         <asp:Label ID="Label6" runat="server" Text="<b>Pasirinkite failus<b/>"></asp:Label>
         <br />
         <br />
-        <asp:ValidationSummary ID="ValidationSummary1" runat="server" Font-Bold="True" Font-Size="Larger" ForeColor="Red" />
-        <asp:Table ID="Table6" runat="server" BorderColor="White" ForeColor="Red">
-        </asp:Table>
         <br />
         <br />
         <asp:Label ID="Label7" runat="server" Text="Pirmas failas:"></asp:Label>
