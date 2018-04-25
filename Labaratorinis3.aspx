@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Labaratorinis2.aspx.cs" Inherits="Labaratorinis2" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Labaratorinis3.aspx.cs" Inherits="Labaratorinis2" %>
 
 <!DOCTYPE html>
 

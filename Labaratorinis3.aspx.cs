@@ -8,25 +8,22 @@ using System.IO;
 
 public partial class Labaratorinis2 : System.Web.UI.Page
 {
-    //duomenų failai
-    //public const string stduoma = "App_Data/U14a.txt";
-    //public const string stduomb = "App_Data/U14b.txt";
-    ////public const string stduoma = "App_Data/U14aa.txt";
-    ////public const string stduomb = "App_Data/U14ba.txt";
     protected void Page_Load(object sender, EventArgs e)
     {
         ValidationSettings.UnobtrusiveValidationMode = UnobtrusiveValidationMode.None;
 
     }
     /// <summary>
-    /// Skaitomo duomenis 
+    /// Nuskaito duomenis studentų
     /// </summary>
-    /// <returns> Gražina studentų sąrašą</returns>
+    /// <param name="stduoma"> nuoroda i pirmą duomenų failą</param>
+    /// <param name="stduomb"> nuoroda i antra duomenų failą</param>
+    /// <returns> studentų sąrašas</returns>
     private Sarasas<Studentas> skaitymas(string stduoma, string stduomb)
     {
         Sarasas<Studentas> sarasas = new Sarasas<Studentas>();
         double Reikalavimai;
-        using (StreamReader reader1 = new StreamReader(@stduomb))
+        using (StreamReader reader1 = new StreamReader(stduomb))
         {
             string[] duomenys = reader1.ReadLine().Split(';');
             sarasas.PirmaEilute(double.Parse(duomenys[0]), double.Parse(duomenys[1]));
@@ -78,13 +75,18 @@ public partial class Labaratorinis2 : System.Web.UI.Page
         LentelesAntraste(lentele);
         for (A.Pradžia(); A.Yra(); A.Kitas())
         {
-            if (A.ImtiDuomenis().Grupe == grupe)
+            if (A.ImtiDuomenis().Grupe == grupe && A.ImtiDuomenis().ArPirmunas)
             {
                 IterptiIrasa(A.ImtiDuomenis(), lentele);
             }
         }
 
     }
+    /// <summary>
+    /// Skaičiuoja pirmūnus
+    /// </summary>
+    /// <param name="x"> studentų sąrašas</param>
+    /// <param name="Reikalavimai"> Reikalavimai</param>
     public void SkaiciuotiPirmunus(Sarasas<Studentas> x, double Reikalavimai)
     {
         int Taskai = 0;
@@ -101,7 +103,9 @@ public partial class Labaratorinis2 : System.Web.UI.Page
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
-
+        string stduoma = Server.MapPath("App_Data/pirmas.txt");
+        string stduomb = Server.MapPath("App_Data/antras.txt");
+        AtliktiVeiksmus(stduoma, stduomb);
     }
     /// <summary>
     /// Išveda studentą į lentelę
@@ -173,6 +177,8 @@ public partial class Labaratorinis2 : System.Web.UI.Page
                 table1.Rows.Add(LentelesEilute);
                 line = reader.ReadLine();
             }
+            while (reader.Peek() != -1) ;
+            reader.Close();
         }
         string[] lines = File.ReadAllLines(stduoma);
         PirmosPradinesLentelesAntraste(table2);
@@ -234,6 +240,8 @@ public partial class Labaratorinis2 : System.Web.UI.Page
     /// <summary>
     /// spausdinami duomenys
     /// </summary>
+    /// <param name="stduoma"> pirmas duomenu failas</param>
+    /// <param name="stduomb"> antras duomenu failas</param>
     void SpausdintiDuomenis(string stduoma, string stduomb)
     {
         string path = Server.MapPath("App_Data/Duomenys.txt");
@@ -282,17 +290,12 @@ public partial class Labaratorinis2 : System.Web.UI.Page
     {
         if (FileUpload1.HasFile && FileUpload2.HasFile)
         {
-            string stduoma = Server.MapPath(FileUpload1.FileName);
-            string stduomb = Server.MapPath(FileUpload2.FileName);
-            Sarasas<Studentas> Sarasas = skaitymas(stduoma, stduomb);
-            Sarasas.SalintiStudentus();
-            Sarasas.Rikiuoti();
-            Spausdinti(Sarasas, Table1);
-            SpausdintiPradiniusDuomenis(Table4, Table3, Table5, stduoma, stduomb);
-            string AtrinktiGrupe = TextBox1.Text;
-            SpausdintiAtrinkta(Sarasas, Table2, AtrinktiGrupe);
-            SpausdintiRezultatus(Sarasas);
-            SpausdintiDuomenis(stduoma, stduomb);
+            string stduoma = Server.MapPath("App_Data/pirmas.txt");
+            FileUpload1.SaveAs(stduoma);
+            string stduomb = Server.MapPath("App_Data/antras.txt");
+            FileUpload2.SaveAs(stduomb);
+            AtliktiVeiksmus(stduoma, stduomb);
+
         }
         else
         {
@@ -302,6 +305,27 @@ public partial class Labaratorinis2 : System.Web.UI.Page
             row.Cells.Add(pavadinimas);
             Table1.Rows.Add(row);
         }
+
+     
+    }
+    /// <summary>
+    /// atlieka veiksmus su pasirinktais 
+    /// </summary>
+    /// <param name="pirmas"> nuoroda i pirma duomenu faila</param>
+    /// <param name="antras"> nuoroda i antra duomenu faila</param>
+    /// <returns></returns>
+    Sarasas<Studentas> AtliktiVeiksmus( string pirmas, string antras)
+    {
+        Sarasas<Studentas> Sarasas = skaitymas(pirmas, antras);
+        Sarasas.SalintiStudentus();
+        Sarasas.Rikiuoti();
+        Spausdinti(Sarasas, Table1);
+        SpausdintiPradiniusDuomenis(Table4, Table3, Table5, pirmas, antras);
+        string AtrinktiGrupe = TextBox1.Text;
+        SpausdintiAtrinkta(Sarasas, Table2, AtrinktiGrupe);
+        SpausdintiRezultatus(Sarasas);
+        SpausdintiDuomenis(pirmas, antras);
+        return Sarasas;
     }
 
 

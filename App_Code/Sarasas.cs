@@ -80,16 +80,16 @@ public class Sarasas<tipas> : IEnumerable<tipas> where tipas : IComparable<tipas
     /// </summary>
     public void Rikiuoti()
     {
-        for (Mazgas<tipas> d1 = pr; d1 != null; d1 = d1.Kitas)
+        for (Mazgas<Studentas> d1 = pr as Mazgas<Studentas>; d1 != null; d1 = d1.Kitas)
         {
-            Mazgas<tipas> minv = d1;
-            for (Mazgas<tipas> d2 = d1.Kitas; d2 != null; d2 = d2.Kitas)
-                if (d2.Duom.CompareTo(minv.Duom)==-1)
+            Mazgas<Studentas> minv = d1 as Mazgas<Studentas>;
+            for (Mazgas<Studentas> d2 = d1.Kitas; d2 != null; d2 = d2.Kitas)
+                if (d2.Duom < minv.Duom)
                     minv = d2;
-            // Informacinių dalių sukeitimas vietomis
-            tipas St = d1.Duom;
-            d1.Duom = minv.Duom;
-            minv.Duom = St;
+                    // Informacinių dalių sukeitimas vietomis
+                    Studentas St = d1.Duom;
+                    d1.Duom = minv.Duom;
+                    minv.Duom = St;
         }
     }
     /// <summary>
@@ -101,7 +101,7 @@ public class Sarasas<tipas> : IEnumerable<tipas> where tipas : IComparable<tipas
         {
             d1.Duom.StipendijosDydis(PinigaiTaskui);
             if (d1.Kitas != null)
-                if (d1.Kitas.Duom.ArSkola|| !d1.Kitas.Duom.ArStipendija)
+                if (d1.Kitas.Duom.ArSkola || !d1.Kitas.Duom.ArStipendija)
                 {
                     d1.Kitas = d1.Kitas.Kitas;
                 }

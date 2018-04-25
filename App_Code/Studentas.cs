@@ -151,10 +151,10 @@ public class Studentas : IComparable<Studentas>, IEquatable<Studentas>
     {
         if (studentas == null)
             return 1;
-        if (Stipendija > studentas.Stipendija)
-            return -1;
-        else if (Stipendija > studentas.Stipendija)
+        if (studentas.Stipendija > Stipendija)
             return 1;
+        else if (Stipendija > studentas.Stipendija)
+            return -1;
         else
         {
             return String.Compare(Vardas, studentas.Vardas, StringComparison.CurrentCulture);
